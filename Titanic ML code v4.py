@@ -1,4 +1,4 @@
-import pylab, random, sklearn.metrics
+import os, pylab, random, sklearn.metrics
 import matplotlib.pyplot as plt
 import numpy as np, pandas as pd
 from sklearn.linear_model import LogisticRegression
@@ -134,8 +134,10 @@ def buildTestSet(fileName):
     print('Finished processing', len(examples), 'passengers\n')    
     return examples
 
-file = '/Users/wandacosta/Desktop/Python/Datasets/Titanic - ML problem from Kaggle/train.csv'
-examples = buildTitanicExamples(file)    
+#file = '/Users/wandacosta/Desktop/Python/Datasets/Titanic - ML problem from Kaggle/train.csv'
+train_file = os.path.dirname(os.path.realpath(__file__)) + '/train.csv'
+test_file = os.path.dirname(os.path.realpath(__file__)) + '/test.csv'
+examples = buildTitanicExamples(train_file)    
 # for i in range(10):
 #     print(examples[i].getFeatures())
 
@@ -369,21 +371,21 @@ def submission_file(training_set, test_set, prob = 0.5):
             prediction = 0
         predictions.append(prediction)
         results.loc[i] = [test_set[i].getPassengerId(), prediction]
-
-    results.to_csv('/Users/wandacosta/Desktop/Python/Datasets/Titanic - ML problem from Kaggle/submission.csv', index = False)
+    output_file = os.path.dirname(os.path.realpath(__file__)) + '/submission.csv'
+    results.to_csv(output_file, index = False)
     return 
 
-# training_set = buildTitanicExamples('/Users/wandacosta/Desktop/Python/Datasets/Titanic - ML problem from Kaggle/train.csv')
-# test_set = buildTestSet('/Users/wandacosta/Desktop/Python/Datasets/Titanic - ML problem from Kaggle/test.csv')
-# submission_file(training_set, test_set)
+training_set = buildTitanicExamples(train_file)
+test_set = buildTestSet(test_file)
+submission_file(training_set, test_set)
 
 # print(examples)
 # random.seed()
-numSplits = 15
+#numSplits = 20
 # results = pd.DateFrame(columns = ('PassengerId', 'Survived', 'prob', 'prediction'))
-truePos, falsePos, trueNeg, falseNeg = 0, 0, 0, 0
-print('Average of', numSplits, '80/20 splits LR') # LR meaning Logistic Regression
-print('Average TruePos, FalsePos, TrueNeg, FalseNeg:', randomSplits(examples, lr, numSplits, True))
+#truePos, falsePos, trueNeg, falseNeg = 0, 0, 0, 0
+#print('Average of', numSplits, '80/20 splits LR') # LR meaning Logistic Regression
+#print('Average TruePos, FalsePos, TrueNeg, FalseNeg:', randomSplits(examples, lr, numSplits, True))
 # getStats(truePos, falsePos, trueNeg, falseNeg, True)
 
 def buildROC(trainingSet, testSet, title):
